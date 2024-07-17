@@ -1,31 +1,38 @@
+import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import bg from './assets/images/bg.jpg'
-
+import bg from './assets/images/bg.jpg'; // Ensure this path is correct
+import About from './components/About';
+import Services from './components/Services';
+import Review from './components/Review';
+import Contact from './components/Contact';
 
 function App() {
- 
-
   return (
     <>
-   
-    <div style={{backgroundImage: `url(${bg})` ,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    minHeight: '100vh',
-  
-    
-    
-    }}>
-    <Navbar/>
-     <Hero/>
+      <div
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '100vh',
+        }}
+      >
+        <Navbar />
+        <Hero />
+      </div>
      
-    </div>
+      
+      <About/>
+      <Services/>
+      <Review/>
+      <Contact/>
+
+      
+      
     </>
-   
-    
-  )
+  );
 }
 
-export default App
+export default App;
