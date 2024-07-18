@@ -25,8 +25,7 @@ const Review = () => {
   const [isAnimated, setIsAnimated] = useState(false);
 
 const { ref, inView } = useInView({
-  threshold: 0.5,
-  triggerOnce:false
+
 }); 
 
 useEffect(() => {
@@ -35,14 +34,14 @@ useEffect(() => {
   }
 }, [inView]);
 
-const h1animation={
-  hidden:{scale:1,y:70},
-  visible:{scale:1,y:0,transition:{delay:0.3, duration:0.7}}
+const h1animation = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1 } }
 };
 
-const textanimation={
-  hidden:{scale:0},
-  visible:{scale:1,transition:{delay:0.3, duration:0.7}}
+const textanimation = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
 

@@ -18,13 +18,13 @@ function About() {
 
   const imageAnimation = {
     hidden: { scale: 0 },
-    visible: { scale: 1, transition: { delay: 0.3, duration: 0.7 } },
+    visible: { scale: 1, transition: {  duration: 1 } },
   };
   
 
   const textAnimation = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.7 } },
+    visible: { opacity: 1, y: 0, transition: {  duration: 1 } },
   };
 
   return (

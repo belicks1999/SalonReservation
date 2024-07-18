@@ -6,8 +6,8 @@ function Contact() {
   const [isTitleAnimated, setIsTitleAnimated] = useState(false);
   const [isGridAnimated, setIsGridAnimated] = useState(false);
   
-  const { ref: titleRef, inView: titleInView } = useInView({ threshold: 0.5 });
-  const { ref: gridRef, inView: gridInView } = useInView({ threshold: 0.5 });
+  const { ref: titleRef, inView: titleInView } = useInView({ });
+  const { ref: gridRef, inView: gridInView } = useInView({ });
 
   useEffect(() => {
     if (titleInView) setIsTitleAnimated(true);
@@ -18,15 +18,15 @@ function Contact() {
   }, [gridInView]);
 
   const h1animation = {
-    hidden: { scale: 1, y: 70 },
-    visible: { scale: 1, y: 0, transition: { delay: 0.3, duration: 0.7 } }
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 1 } }
   };
+  
 
   const gridAnimation = {
-    hidden: { scale: 0 },
-    visible: { scale: 1, transition: { delay: 0.3, duration: 0.7 } }
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: {  duration: 1 } },
   };
-
   return (
     <div className='flex flex-col justify-center border-b border-black'>
       <section className="bg-gray-100">

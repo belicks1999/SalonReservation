@@ -7,7 +7,7 @@ import {motion} from 'framer-motion';
 function Reservation({onClose,show}) {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
-  const [otp, setOtp] = useState('55');
+  const [otp, setOtp] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
@@ -48,7 +48,7 @@ function Reservation({onClose,show}) {
       <motion.div
       initial={{scale:0}}
       animate={{scale:1}}
-      transition={{delay:0.2, duration:0.5}}
+      transition={{ duration:0.5}}
       className="bg-white p-6 rounded shadow-lg w-80 lg:w-1/3">
         <h2 className="text-xl font-bold mb-4 text-center">Make Reservation</h2>
         <form onSubmit={handleSubmit}>
@@ -71,7 +71,7 @@ function Reservation({onClose,show}) {
             />
             <button
               type="button"
-              className="ml-4 bg-teal-600 text-white p-2 rounded hover:bg-teal-700 transition-colors"
+              className="ml-4 bg-teal-600 text-white p-2 rounded hover:bg-green-500 transition-colors"
             >
               Send
             </button>

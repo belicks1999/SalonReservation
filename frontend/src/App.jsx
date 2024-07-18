@@ -1,17 +1,18 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import bg from './assets/images/bg.jpg'; // Ensure this path is correct
 import About from './components/About';
 import Services from './components/Services';
 import Review from './components/Review';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-
+import ScrollToTopButton from './components/ScrollToTopButton';
+import { Element } from 'react-scroll';
+import bg from './assets/images/bg.jpg'; // Ensure this path is correct
 
 function App() {
   return (
-    <>
+    <div className="App">
       <div
         style={{
           backgroundImage: `url(${bg})`,
@@ -22,25 +23,30 @@ function App() {
         }}
       >
         <Navbar />
-        <Hero />
+        <Element name="hero">
+          <Hero />
+        </Element>
       </div>
-     
 
-     
-     <About/>
-      <Services/>
-      <Review/>
-      <Contact/>
-      <Footer/>
-      
+      <Element name="about">
+        <About />
+      </Element>
 
-    
-      
-      
+      <Element name="services">
+        <Services />
+      </Element>
 
-      
-      
-    </>
+      <Element name="review">
+        <Review />
+      </Element>
+
+      <Element name="contact">
+        <Contact />
+      </Element>
+
+      <ScrollToTopButton />
+      <Footer />
+    </div>
   );
 }
 
