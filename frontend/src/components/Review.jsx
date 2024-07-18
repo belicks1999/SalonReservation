@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {motion} from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 const reviews = [
   {
@@ -12,11 +14,37 @@ const reviews = [
   {
     text: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
     author: "John Smith"
-  }
+  } 
+  
 ];
+
+
 
 const Review = () => {
   const [current, setCurrent] = useState(0);
+  const [isAnimated, setIsAnimated] = useState(false);
+
+const { ref, inView } = useInView({
+  threshold: 0.5,
+  triggerOnce:false
+}); 
+
+useEffect(() => {
+  if (inView) {
+    setIsAnimated(true);
+  }
+}, [inView]);
+
+const h1animation={
+  hidden:{scale:1,y:70},
+  visible:{scale:1,y:0,transition:{delay:0.3, duration:0.7}}
+};
+
+const textanimation={
+  hidden:{scale:0},
+  visible:{scale:1,transition:{delay:0.3, duration:0.7}}
+};
+
 
   const nextSlide = () => {
     setCurrent((current + 1) % reviews.length);
@@ -28,9 +56,19 @@ const Review = () => {
 
   return (
     <div className="flex flex-col items-center justify-center container mx-auto pt-16 pb-12 px-6 lg:px-36 border-b border-b-black bg-[conic-gradient(at_top,_var(--tw-gradient-stops))]  from-orange-900 via-amber-100 to-orange-900">
-      <h1 className="text-3xl lg:text-4xl font-serif font-bold text-center ">Reviews</h1>
+      <motion.h1
+      ref={ref}
+      initial="hidden"
+      animate={isAnimated ? "visible" : "hidden"}
+      variants={h1animation}
+      className="text-3xl lg:text-4xl font-serif font-bold text-center ">Reviews</motion.h1>
       <section class=" px-4 py-12 md:py-24">
-  <div class="max-w-screen-xl mx-auto">
+  <motion.div
+  ref={ref}
+  initial="hidden"
+  animate={isAnimated ? "visible" : "hidden"}
+  variants={textanimation}
+  class="max-w-screen-xl mx-auto">
     <h2 class="font-black text-black text-center text-xl lg:text-3xl leading-none uppercase max-w-2xl mx-auto mb-12">What Customers
       Are Saying</h2>
     <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4 relative">
@@ -107,7 +145,7 @@ const Review = () => {
         </div>
       </div>
     </div>
-  </div>
+  </motion.div>
 </section>
     </div>
   );

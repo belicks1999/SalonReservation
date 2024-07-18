@@ -1,17 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 function Contact() {
+  const [isTitleAnimated, setIsTitleAnimated] = useState(false);
+  const [isGridAnimated, setIsGridAnimated] = useState(false);
+  
+  const { ref: titleRef, inView: titleInView } = useInView({ threshold: 0.5 });
+  const { ref: gridRef, inView: gridInView } = useInView({ threshold: 0.5 });
+
+  useEffect(() => {
+    if (titleInView) setIsTitleAnimated(true);
+  }, [titleInView]);
+
+  useEffect(() => {
+    if (gridInView) setIsGridAnimated(true);
+  }, [gridInView]);
+
+  const h1animation = {
+    hidden: { scale: 1, y: 70 },
+    visible: { scale: 1, y: 0, transition: { delay: 0.3, duration: 0.7 } }
+  };
+
+  const gridAnimation = {
+    hidden: { scale: 0 },
+    visible: { scale: 1, transition: { delay: 0.3, duration: 0.7 } }
+  };
+
   return (
     <div className='flex flex-col justify-center border-b border-black'>
-      
       <section className="bg-gray-100">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-20 lg:px-8">
           <div className="max-w-2xl lg:max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900">Visit Our Location</h2>
-            
+            <motion.h2
+              ref={titleRef}
+              initial="hidden"
+              animate={isTitleAnimated ? "visible" : "hidden"}
+              variants={h1animation}
+              className="text-3xl font-extrabold text-gray-900">
+              Visit Our Location
+            </motion.h2>
           </div>
           <div className="mt-16 lg:mt-20">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <motion.div
+              ref={gridRef}
+              initial="hidden"
+              animate={isGridAnimated ? "visible" : "hidden"}
+              variants={gridAnimation}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="rounded-lg overflow-hidden">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11672.945750644447!2d-122.42107853750231!3d37.7730507907087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858070cc2fbd55%3A0xa71491d736f62d5c!2sGolden%20Gate%20Bridge!5e0!3m2!1sen!2sus!4v1619524992238!5m2!1sen!2sus"
@@ -36,7 +72,7 @@ function Contact() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

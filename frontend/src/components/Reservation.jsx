@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
+import {motion} from 'framer-motion';
+
 
 function Reservation({onClose,show}) {
   const [name, setName] = useState('');
@@ -43,7 +45,11 @@ function Reservation({onClose,show}) {
 
     
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 min-w-lg">
-      <div className="bg-white p-6 rounded shadow-lg w-80 lg:w-1/3">
+      <motion.div
+      initial={{scale:0}}
+      animate={{scale:1}}
+      transition={{delay:0.2, duration:0.5}}
+      className="bg-white p-6 rounded shadow-lg w-80 lg:w-1/3">
         <h2 className="text-xl font-bold mb-4 text-center">Make Reservation</h2>
         <form onSubmit={handleSubmit}>
           <input 
@@ -117,7 +123,7 @@ function Reservation({onClose,show}) {
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
