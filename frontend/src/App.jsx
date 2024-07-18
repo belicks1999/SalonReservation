@@ -6,6 +6,8 @@ import About from './components/About';
 import Services from './components/Services';
 import Review from './components/Review';
 import Contact from './components/Contact';
+import Footer from './components/Footer';
+
 
 function App() {
   return (
@@ -23,11 +25,18 @@ function App() {
         <Hero />
       </div>
      
-      
-      <About/>
+
+     
+     <About/>
       <Services/>
       <Review/>
       <Contact/>
+      <Footer/>
+      
+
+    
+      
+      
 
       
       

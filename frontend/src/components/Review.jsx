@@ -27,9 +27,9 @@ const Review = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center container mx-auto mt-20 mb-20 pb-12 px-6 lg:px-36 border-b border-b-black">
-      <h1 className="text-3xl lg:text-5xl font-serif font-bold text-center ">Reviews</h1>
-      <section class="bg-white px-4 py-12 md:py-24">
+    <div className="flex flex-col items-center justify-center container mx-auto pt-16 pb-12 px-6 lg:px-36 border-b border-b-black bg-[conic-gradient(at_top,_var(--tw-gradient-stops))]  from-orange-900 via-amber-100 to-orange-900">
+      <h1 className="text-3xl lg:text-4xl font-serif font-bold text-center ">Reviews</h1>
+      <section class=" px-4 py-12 md:py-24">
   <div class="max-w-screen-xl mx-auto">
     <h2 class="font-black text-black text-center text-xl lg:text-3xl leading-none uppercase max-w-2xl mx-auto mb-12">What Customers
       Are Saying</h2>
