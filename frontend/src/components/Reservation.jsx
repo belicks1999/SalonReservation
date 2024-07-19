@@ -1,22 +1,52 @@
 import React, { useState } from 'react';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-function Reservation({onClose,show}) {
+function Reservation({ onClose, show }) {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
+  const [inputOtp, setInputOtp] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({ name, mobile, otp, date, time });
+
+    if (otp !== inputOtp) {
+      toast.error("Invalid OTP. Please try again.");
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/user/reserve', { name, mobile, date, time });
+      toast.success("Reservation successful");
+      setMobile('');
+      setName('');
+      setDate('');
+      setTime('');
+      setOtp('');
+      setInputOtp('');
+      
+    } catch (error) {
+      toast.error("Reservation failed. Please try again.");
+    }
   };
+
+  const otpButton = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/user/otp', { mobile });
+      setOtp(response.data.otp);
+      toast.success("OTP sent successfully");
+    } catch (error) {
+      toast.error("Failed to send OTP. Please try again.");
+    }
+  };
+
   const timeSlots = [
     '10:00 - 11:00',
     '11:00 - 12:00',
@@ -35,24 +65,25 @@ function Reservation({onClose,show}) {
   const getTodayDate = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   };
 
   if (!show) return null;
-  return (
 
-    
+  return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 min-w-lg">
       <motion.div
-      initial={{scale:0}}
-      animate={{scale:1}}
-      transition={{ duration:0.5}}
-      className="bg-white p-6 rounded shadow-lg w-80 lg:w-1/3">
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white p-6 rounded shadow-lg w-96 lg:h-[120] lg:w-1/3"
+      >
+        <ToastContainer />
         <h2 className="text-xl font-bold mb-4 text-center">Make Reservation</h2>
         <form onSubmit={handleSubmit}>
-          <input 
+          <input
             type="text"
             className="border-black p-2 rounded w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Enter Your Name"
@@ -60,8 +91,7 @@ function Reservation({onClose,show}) {
             onChange={(e) => setName(e.target.value)}
             required
           />
-
-        <div className="flex items-center mb-4">
+          <div className="flex items-center mb-4">
             <PhoneInput
               className="border-black p-2 rounded flex-grow focus:outline-none focus:ring-2 focus:ring-blue-600"
               placeholder="Enter Your Mobile No"
@@ -71,22 +101,23 @@ function Reservation({onClose,show}) {
             />
             <button
               type="button"
+              onClick={otpButton}
               className="ml-4 bg-teal-600 text-white p-2 rounded hover:bg-green-500 transition-colors"
             >
-              Send
+              Send OTP
             </button>
           </div>
-          {otp?<input 
-            type="number"
-            className="border-black p-2 rounded w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-          />:null}
-          
-
-          <input 
+          {otp ? (
+            <input
+              type="number"
+              className="border-black p-2 rounded w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              placeholder="Enter OTP"
+              value={inputOtp}
+              onChange={(e) => setInputOtp(e.target.value)}
+              required
+            />
+          ) : null}
+          <input
             type="date"
             className="border-black p-2 rounded w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600"
             value={date}
@@ -94,8 +125,7 @@ function Reservation({onClose,show}) {
             onChange={(e) => setDate(e.target.value)}
             required
           />
-
-            <select 
+          <select
             className='border-black p-2 rounded w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600'
             value={time}
             onChange={(e) => setTime(e.target.value)}
@@ -106,7 +136,6 @@ function Reservation({onClose,show}) {
               <option key={index} value={slot}>{slot}</option>
             ))}
           </select>
-
           <div className="flex justify-center">
             <button
               type="button"
