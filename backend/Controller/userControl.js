@@ -46,7 +46,7 @@ export const getOtp = async (req, res) => {
 export const reservation = async (req, res) => {
   const { name, mobile, date, time, email } = req.body;
 
-  if (!name || !mobile || !date || !time) {
+  if (!name || !mobile || !date || !time|| !email) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
