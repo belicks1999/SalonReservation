@@ -9,10 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function Reservation({ onClose, show }) {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [inputOtp, setInputOtp] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [isOtpSending, setIsOtpSending] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,8 +24,16 @@ function Reservation({ onClose, show }) {
       return;
     }
 
+    const mobileNumber = mobile.replace(/^\+94/, '').replace(/\D/g, '');
+    if (mobileNumber.length !== 9) {
+      toast.error("Phone number must be 9 digits long.");
+      return;
+    }
+
+
     try {
-      const response = await axios.post('http://localhost:5000/api/user/reserve', { name, mobile, date, time });
+      if(otp){
+      const response = await axios.post('http://localhost:5000/api/user/reserve', { name, mobile, date, time,email });
       toast.success("Reservation successful");
       setMobile('');
       setName('');
@@ -31,19 +41,34 @@ function Reservation({ onClose, show }) {
       setTime('');
       setOtp('');
       setInputOtp('');
+      setEmail('');
+    }else{
+      toast.error("Please Verify email");
+    }
       
     } catch (error) {
       toast.error("Reservation failed. Please try again.");
     }
   };
-
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
   const otpButton = async () => {
+    setIsOtpSending(true); // Start loading state
     try {
-      const response = await axios.post('http://localhost:5000/api/user/otp', { mobile });
+      if (!isValidEmail(email)) {
+        toast.error("Invalid email format.");
+      }
+      else{
+      const response = await axios.post('http://localhost:5000/api/user/otp', { email });
       setOtp(response.data.otp);
       toast.success("OTP sent successfully");
+    }
     } catch (error) {
       toast.error("Failed to send OTP. Please try again.");
+    } finally {
+      setIsOtpSending(false); // End loading state
     }
   };
 
@@ -93,19 +118,31 @@ function Reservation({ onClose, show }) {
           />
           <div className="flex items-center mb-4">
             <PhoneInput
+             defaultCountry="LK"
               className="border-black p-2 rounded flex-grow focus:outline-none focus:ring-2 focus:ring-blue-600"
               placeholder="Enter Your Mobile No"
               value={mobile}
               onChange={setMobile}
               required
             />
-            <button
+           
+          </div>
+          <div className="flex items-center mb-4">
+          <input
+            type="email"
+            className="border-black p-2 rounded flex-grow focus:outline-none focus:ring-2 focus:ring-blue-600"
+            placeholder="Enter Your Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          /> 
+          <button
               type="button"
               onClick={otpButton}
+              disabled={isOtpSending}
               className="ml-4 bg-teal-600 text-white p-2 rounded hover:bg-green-500 transition-colors"
-            >
-              Send OTP
-            </button>
+
+            >{isOtpSending?"Sending" :"Send OTP"}</button>
           </div>
           {otp ? (
             <input

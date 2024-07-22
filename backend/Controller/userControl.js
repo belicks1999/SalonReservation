@@ -1,14 +1,23 @@
 import otpGenerator from 'otp-generator';
 import dotenv from 'dotenv';
 import User from '../Model/User.js';  // Ensure this path is correct
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
-export const getOtp = async (req, res) => {
-  const mobile = req.body.mobile;
+const transporter = nodemailer.createTransport({
+  service: 'Gmail', // Use your email service provider
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
-  if (!mobile) {
-    return res.status(400).json({ message: 'Mobile number is required' });
+export const getOtp = async (req, res) => {
+  const email = req.body.email;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
   }
 
   const otp = otpGenerator.generate(6, {
@@ -18,8 +27,15 @@ export const getOtp = async (req, res) => {
     specialChars: false
   });
 
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: 'Your OTP Code',
+    text: `Your OTP code is ${otp}`
+  };
+
   try {
-    // Your Twilio code to send OTP would be here, if integrated
+    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'OTP sent successfully', otp });
   } catch (error) {
     console.error('Error sending OTP:', error);
@@ -28,14 +44,14 @@ export const getOtp = async (req, res) => {
 };
 
 export const reservation = async (req, res) => {
-  const { name, mobile, date, time } = req.body;
+  const { name, mobile, date, time, email } = req.body;
 
   if (!name || !mobile || !date || !time) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
   try {
-    const newReservation = new User({ name, mobile, date, time });
+    const newReservation = new User({ name, mobile, date, time, email });
     await newReservation.save();
     res.status(200).json({ message: 'Reservation successful' });
   } catch (error) {
