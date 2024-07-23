@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 import { motion } from 'framer-motion';
@@ -15,6 +15,41 @@ function Reservation({ onClose, show }) {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [isOtpSending, setIsOtpSending] = useState(false);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+
+  useEffect(() => {
+    const fetchAvailableSlots = async () => {
+      if (date) {
+        try {
+          const response = await axios.get('http://localhost:5000/api/user/available-slots', { params: { date } });
+          const slots = response.data;
+
+          // Get current time
+          const now = new Date();
+          const currentHours = now.getHours();
+          const currentMinutes = now.getMinutes();
+
+          // Filter slots for today
+          const filteredSlots = date === getTodayDate() 
+            ? slots.filter(slot => {
+                const [start, end] = slot.split(' - ').map(t => t.trim());
+                const [startHours, startMinutes] = start.split(':').map(Number);
+                const [endHours, endMinutes] = end.split(':').map(Number);
+
+                const startTimeInMinutes = (start.includes('PM') ? startHours + 12 : startHours) * 60 + startMinutes;
+                return startTimeInMinutes > (currentHours * 60 + currentMinutes);
+              })
+            : slots;
+
+          setAvailableTimeSlots(filteredSlots);
+        } catch (error) {
+          toast.error("Failed to fetch available time slots.");
+        }
+      }
+    };
+
+    fetchAvailableSlots();
+  }, [date]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,62 +65,46 @@ function Reservation({ onClose, show }) {
       return;
     }
 
-
     try {
-      if(otp){
-      const response = await axios.post('http://localhost:5000/api/user/reserve', { name, mobile, date, time,email });
-      toast.success("Reservation successful");
-      setMobile('');
-      setName('');
-      setDate('');
-      setTime('');
-      setOtp('');
-      setInputOtp('');
-      setEmail('');
-    }else{
-      toast.error("Please Verify email");
-    }
-      
+      if (otp) {
+        const response = await axios.post('http://localhost:5000/api/user/reserve', { name, mobile, date, time, email });
+        toast.success("Reservation successful");
+        setMobile('');
+        setName('');
+        setDate('');
+        setTime('');
+        setOtp('');
+        setInputOtp('');
+        setEmail('');
+      } else {
+        toast.error("Please Click Send OTP and Verify email");
+      }
     } catch (error) {
       toast.error("Reservation failed. Please try again.");
     }
   };
+
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
   const otpButton = async () => {
     setIsOtpSending(true); // Start loading state
     try {
       if (!isValidEmail(email)) {
         toast.error("Invalid email format.");
+      } else {
+        const response = await axios.post('http://localhost:5000/api/user/otp', { email });
+        setOtp(response.data.otp);
+        toast.success("OTP sent successfully");
       }
-      else{
-      const response = await axios.post('http://localhost:5000/api/user/otp', { email });
-      setOtp(response.data.otp);
-      toast.success("OTP sent successfully");
-    }
     } catch (error) {
       toast.error("Failed to send OTP. Please try again.");
     } finally {
       setIsOtpSending(false); // End loading state
     }
   };
-
-  const timeSlots = [
-    '10:00 AM - 11:00 AM',
-    '11:00 AM - 12:00 PM',
-    '12:00 PM - 13:00 PM',
-    '13:00 PM - 14:00 PM',
-    '14:00 PM - 15:00 PM',
-    '15:00 PM - 16:00 PM',
-    '16:00 PM - 17:00 PM',
-    '17:00 PM - 18:00 PM',
-    '18:00 PM - 19:00 PM',
-    '19:00 PM - 20:00 PM',
-    '20:00 PM - 21:00 PM',
-    '21:00 PM - 22:00 PM',
-  ];
 
   const getTodayDate = () => {
     const today = new Date();
@@ -120,7 +139,7 @@ function Reservation({ onClose, show }) {
             <PhoneInput
              defaultCountry="LK"
               className="border-black p-2 rounded flex-grow focus:outline-none focus:ring-2 focus:ring-blue-600"
-              placeholder="Enter Your Mobile No"
+              placeholder="Enter Your Mobile No Without 0"
               value={mobile}
               onChange={setMobile}
               required
@@ -169,7 +188,7 @@ function Reservation({ onClose, show }) {
             required
           >
             <option value="">Select Time Slot</option>
-            {timeSlots.map((slot, index) => (
+            {availableTimeSlots.map((slot, index) => (
               <option key={index} value={slot}>{slot}</option>
             ))}
           </select>

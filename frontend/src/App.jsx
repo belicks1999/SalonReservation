@@ -1,4 +1,6 @@
+// src/App.jsx
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -7,12 +9,17 @@ import Review from './components/Review';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminPanel from './components/admin/Admin';
+import UpcomingReservations from './components/admin/UpcomingReservation';
+import AllReservations from './components/admin/AllReservations';
+import bg from './assets/images/bg.jpg'; 
 import { Element } from 'react-scroll';
-import bg from './assets/images/bg.jpg'; // Ensure this path is correct
+import MakeReservation from './components/admin/MakeReservation';
 
-function App() {
+function MainApp() {
   return (
-    <div className="App">
+    <div>
       <div
         style={{
           backgroundImage: `url(${bg})`,
@@ -26,8 +33,8 @@ function App() {
         <Element name="hero">
           <Hero />
         </Element>
+        
       </div>
-
       <Element name="about">
         <About />
       </Element>
@@ -43,10 +50,28 @@ function App() {
       <Element name="contact">
         <Contact />
       </Element>
-
       <ScrollToTopButton />
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainApp />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminPanel />}>
+          <Route index element={<UpcomingReservations />} />
+          <Route path="upcoming-reservations" element={<UpcomingReservations />} />
+          <Route path="all-reservations" element={<AllReservations />} />
+          <Route path="make-reservations" element={<MakeReservation />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

@@ -6,8 +6,7 @@ import { useInView } from 'react-intersection-observer';
 function About() {
   const [isAnimated, setIsAnimated] = useState(false);
   const { ref, inView } = useInView({
-    threshold: 0.2,
-    triggerOnce:false
+ 
   });
 
   useEffect(() => {
@@ -18,13 +17,13 @@ function About() {
 
   const imageAnimation = {
     hidden: { scale: 0 },
-    visible: { scale: 1, transition: {  duration: 1 } },
+    visible: { scale: 1, transition: {  duration: 0.5 } },
   };
   
 
   const textAnimation = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: {  duration: 1 } },
+    visible: { opacity: 1, y: 0, transition: {  duration: 0.5 } },
   };
 
   return (
