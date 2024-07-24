@@ -3,7 +3,7 @@ import React from 'react';
 import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
 
-const AdminPanel = () => {
+const Admin = () => {
   return (
     <div className="flex">
       <Sidebar />
@@ -14,4 +14,4 @@ const AdminPanel = () => {
   );
 };
 
-export default AdminPanel;
+export default Admin;

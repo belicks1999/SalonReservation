@@ -23,26 +23,23 @@ function Reservation({ onClose, show }) {
         try {
           const response = await axios.get('http://localhost:5000/api/user/available-slots', { params: { date } });
           const slots = response.data;
-
-          // Get current time
           const now = new Date();
-          const currentHours = now.getHours();
-          const currentMinutes = now.getMinutes();
+          const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-          // Filter slots for today
-          const filteredSlots = date === getTodayDate() 
+         
+
+          const filteredSlots = date === getTodayDate()
             ? slots.filter(slot => {
-                const [start, end] = slot.split(' - ').map(t => t.trim());
-                const [startHours, startMinutes] = start.split(':').map(Number);
-                const [endHours, endMinutes] = end.split(':').map(Number);
-
-                const startTimeInMinutes = (start.includes('PM') ? startHours + 12 : startHours) * 60 + startMinutes;
-                return startTimeInMinutes > (currentHours * 60 + currentMinutes);
+                const slotStartTimeInMinutes = parseTimeString(slot);
+                return slotStartTimeInMinutes > nowMinutes;
               })
             : slots;
 
+  
+
           setAvailableTimeSlots(filteredSlots);
         } catch (error) {
+          console.error('Error fetching available slots:', error);
           toast.error("Failed to fetch available time slots.");
         }
       }
@@ -50,6 +47,31 @@ function Reservation({ onClose, show }) {
 
     fetchAvailableSlots();
   }, [date]);
+
+
+  const parseTimeString = (timeString) => {
+    // Extract start time from the slot
+    const startTime = timeString.split(' - ')[0].trim();
+    
+    // Split time into hours, minutes, and period (AM/PM)
+    const [time, modifier] = startTime.split(' ');
+    const [hours, minutes] = time.split(':').map(Number);
+  
+    // Convert 12-hour time format to 24-hour time format
+    let adjustedHours = hours;
+    if (modifier === 'PM' && hours !== 12) {
+      adjustedHours += 12;
+    } else if (modifier === 'AM' && hours === 12) {
+      adjustedHours = 0;
+    }
+  
+    // Calculate total minutes from midnight
+    return adjustedHours * 60 + minutes;
+  };
+  
+  
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

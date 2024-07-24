@@ -45,6 +45,12 @@ export const getOtp = async (req, res) => {
 
 export const reservation = async (req, res) => {
   const { name, mobile, date, time, email } = req.body;
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: 'Salon Reservation is Comfirmed',
+    text: `Your Reservation Date is ${date} and time is ${time}`
+  };
 
   if (!name || !mobile || !date || !time|| !email) {
     return res.status(400).json({ message: 'All fields are required' });
@@ -54,6 +60,7 @@ export const reservation = async (req, res) => {
     const newReservation = new User({ name, mobile, date, time, email });
     await newReservation.save();
     res.status(200).json({ message: 'Reservation successful' });
+    await transporter.sendMail(mailOptions);
   } catch (error) {
     console.error('Error making reservation:', error);
     res.status(500).json({ message: 'Reservation failed' });
@@ -70,16 +77,16 @@ export const availableSlot= async(req,res)=>{
   const allTimeSlots = [
     '10:00 AM - 11:00 AM',
     '11:00 AM - 12:00 PM',
-    '12:00 PM - 13:00 PM',
-    '13:00 PM - 14:00 PM',
-    '14:00 PM - 15:00 PM',
-    '15:00 PM - 16:00 PM',
-    '16:00 PM - 17:00 PM',
-    '17:00 PM - 18:00 PM',
-    '18:00 PM - 19:00 PM',
-    '19:00 PM - 20:00 PM',
-    '20:00 PM - 21:00 PM',
-    '21:00 PM - 22:00 PM',
+    '12:00 PM - 1:00 PM',
+    '1:00 PM - 2:00 PM',
+    '2:00 PM - 3:00 PM',
+    '3:00 PM - 4:00 PM',
+    '4:00 PM - 5:00 PM',
+    '5:00 PM - 6:00 PM',
+    '6:00 PM - 7:00 PM',
+    '7:00 PM - 8:00 PM',
+    '8:00 PM - 9:00 PM',
+    '9:00 PM - 10:00 PM',
   ];
 
   const availableTimeSlots = allTimeSlots.filter((slot) => !reservedTimes.includes(slot));
