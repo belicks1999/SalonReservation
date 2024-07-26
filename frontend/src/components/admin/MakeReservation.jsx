@@ -14,6 +14,7 @@ const AdminMakeReservation = () => {
 
   useEffect(() => {
     const fetchAvailableSlots = async () => {
+      //fetch availble slots based on current time
       if (date) {
         try {
           const response = await axios.get('http://localhost:5000/api/user/available-slots', { params: { date } });
@@ -39,6 +40,8 @@ const AdminMakeReservation = () => {
     fetchAvailableSlots();
   }, [date]);
 
+
+  //convert time slot start time to minutes
   const parseTimeString = (timeString) => {
     const startTime = timeString.split(' - ')[0].trim();
     const [time, modifier] = startTime.split(' ');
@@ -57,6 +60,8 @@ const AdminMakeReservation = () => {
   const makeReservation = async (e) => {
     e.preventDefault(); // Prevents the default form submission behavior
 
+    //reservation
+
     try {
       const response = await axios.post('http://localhost:5000/api/admin/reservation', { name, mobile, date, time, email },{ withCredentials: true });
       toast.success("Reservation successful");
@@ -70,6 +75,8 @@ const AdminMakeReservation = () => {
     }
   };
 
+
+  //get todays date
   const getTodayDate = () => {
     const today = new Date();
     const yyyy = today.getFullYear();

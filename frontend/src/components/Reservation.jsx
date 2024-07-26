@@ -19,6 +19,7 @@ function Reservation({ onClose, show }) {
 
   useEffect(() => {
     const fetchAvailableSlots = async () => {
+      // fetch available slots based on current time
       if (date) {
         try {
           const response = await axios.get('http://localhost:5000/api/user/available-slots', { params: { date } });
@@ -74,6 +75,8 @@ function Reservation({ onClose, show }) {
 
 
   const handleSubmit = async (e) => {
+
+    //reservation call
     e.preventDefault();
 
     if (otp !== inputOtp) {
@@ -112,6 +115,7 @@ function Reservation({ onClose, show }) {
   };
 
   const otpButton = async () => {
+    //send otp to customer
     setIsOtpSending(true); // Start loading state
     try {
       if (!isValidEmail(email)) {

@@ -9,7 +9,7 @@ const Sidebar = () => {
    const navigate = useNavigate();
 
    const logout = async()=>{
-
+//LOGOUT call
       try {
          await axios.post('http://localhost:5000/api/admin/logout', {}, { withCredentials: true });
          navigate('/admin/login');

@@ -7,6 +7,8 @@ import passport from 'passport';
 
 dotenv.config();
 
+
+//configuration for email
 const transporter = nodemailer.createTransport({
   service: 'Gmail', // Use your email service provider
   auth: {
@@ -15,6 +17,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+//admin side reservation logic
 export const makeReservation = async (req, res) => {
   const { name, mobile, date, time, email } = req.body;
 
@@ -28,6 +32,8 @@ export const makeReservation = async (req, res) => {
   }
 };
 
+
+//admin side get reservation
 export const getReservation = async (req, res) => {
   try {
     const allreservation = await User.find();
@@ -37,6 +43,8 @@ export const getReservation = async (req, res) => {
   }
 };
 
+
+//admin side delete reservation
 export const deleteReservation = async (req, res) => {
   try {
     const id = req.params.id;
@@ -83,8 +91,10 @@ export const deleteReservation = async (req, res) => {
   }
 };
 
+
+//admin side login
 export const adminLogin = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', (err, user, info) => {//redirect to the passport-config to use passport.js 
     if (err) return next(err);
     if (!user) return res.status(401).json({ message: info.message });
 
@@ -95,6 +105,8 @@ export const adminLogin = (req, res, next) => {
   })(req, res, next);
 };
 
+
+//check admin authentication
 export const Auth = (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).json({ isAuthenticated: true });
@@ -103,6 +115,8 @@ export const Auth = (req, res) => {
   }
 };
 
+
+//logic for admin logout
 export const logout = (req, res) => {
   req.logout((err) => {
     if (err) {

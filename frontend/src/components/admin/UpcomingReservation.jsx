@@ -8,6 +8,7 @@ const UpcomingReservation = () => {
     const [filteredReservations, setFilteredReservations] = useState([]);
 
     useEffect(() => {
+        //show only upcoming reservation including today
         const fetchReservations = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/admin/allreservation',{ withCredentials: true });
@@ -40,6 +41,7 @@ const UpcomingReservation = () => {
     }, []);
 
     useEffect(() => {
+        //search box logic
         const results = reservations.filter(reservation =>
             reservation.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -48,6 +50,8 @@ const UpcomingReservation = () => {
 
     const handleDelete = async (id, index,email) => {
         try {
+
+            //delete reservation
             const response = await axios.delete(`http://localhost:5000/api/admin/${id}`,{ withCredentials: true,email });
             
             // Check if the server response indicates success

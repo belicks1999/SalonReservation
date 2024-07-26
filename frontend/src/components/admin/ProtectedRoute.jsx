@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const ProtectedRoute = () => {
   const [authenticated, setAuthenticated] = useState(null);
-
+//before show admin panel authenticate user
   useEffect(() => {
     const checkAuth = async () => {
       try {

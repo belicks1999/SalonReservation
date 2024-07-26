@@ -8,6 +8,7 @@ const AllReservations = () => {
 
     useEffect(() => {
         const fetchReservations = async () => {
+            //get all reservation from db
             try {
                 const response = await axios.get('http://localhost:5000/api/admin/allreservation',{ withCredentials: true });
                 console.log('API response:', response.data); // Log the API response
@@ -30,6 +31,7 @@ const AllReservations = () => {
     }, []);
 
     useEffect(() => {
+        //serach box logic
         const results = reservations.filter(reservation =>
             reservation.name.toLowerCase().includes(searchTerm.toLowerCase())
         );

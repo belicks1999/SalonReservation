@@ -2,6 +2,8 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import Admin from '../Model/Admin.js'; 
 
+
+//passport configuration for admin login using localstretegy
 passport.use(new LocalStrategy(
   async (username, password, done) => {
     try {

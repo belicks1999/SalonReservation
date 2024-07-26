@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+
+//user collection
 const userSchema = new mongoose.Schema({
   name: String,
   mobile: String, 

@@ -13,6 +13,8 @@ function AdminLogin() {
   const [error, setError] = useState('');
   const navigate = useNavigate(); // Hook for navigation
 
+
+  //admin login logic
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
